@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import TodoItem from './TodoItem'
+import AddTodo from "./AddTodo.jsx";
 import List from '@mui/material/List';
 
 
@@ -10,15 +11,31 @@ export default function TodoList(){
         {id: crypto.randomUUID(), description: "Pay bills", completed: false}
     ];
 
+    const [todoList, setTodoList] = useState(starterTodo)
+
+    const todoAdder = (newTodo) => {
+        setTodoList((oldTodo) => {
+            return(
+                [...oldTodo, {id: crypto.randomUUID(), description: newTodo, completed: false}]
+            )
+        })
+    }
+
+    const todoDeleter = (todoId) => {
+        setTodoList((oldTodo) => (oldTodo.filter((todo) => todo.id !== todoId)))
+    }
+
     return(
         <>
         <h1>Simple To-Do</h1>
         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-            {starterTodo.map((i) => {
-                const labelId = `checkbox-list-label-${i.id}`;
+            {todoList.map((i) => {
+                // const labelId = `checkbox-list-label-${i.id}`;
 
-                return (<TodoItem key={i.id} todo={i} />);
+                return (<TodoItem key={i.id} todo={i} deleter={todoDeleter}/>);
             })}
+
+            <AddTodo todoAdder={todoAdder}/>
         </List>
         </>
     );

@@ -5,9 +5,9 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
-import CommentIcon from '@mui/icons-material/Comment';
+import ClearIcon from '@mui/icons-material/Clear';
 
-export default function TodoItem({todo}) {
+export default function TodoItem({todo, deleter}) {
     const [todoItem, setTodo] = useState(todo);
     const handleToggle = () => {
         setTodo((curItem) => {
@@ -15,13 +15,17 @@ export default function TodoItem({todo}) {
         })
     }
 
+    const deleteTodo = () => {
+        deleter(todoItem.id)
+    }
+
 
     return (
         <ListItem
-            // key={value} // delete?
+            id={todoItem.id} // delete?
             secondaryAction={
-                <IconButton edge="end" aria-label="comments">
-                    <CommentIcon />
+                <IconButton edge="end" aria-label="comments" onClick={deleteTodo}>
+                    <ClearIcon />
                 </IconButton>
             }
             disablePadding
