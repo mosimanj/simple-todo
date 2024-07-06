@@ -7,13 +7,15 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 
-export default function TodoItem({todo, deleter}) {
+export default function TodoItem({todo, deleter, toggler}) {
     const [todoItem, setTodo] = useState(todo);
+
     const handleToggle = () => {
+        toggler(todoItem.id);
         setTodo((curItem) => {
             return ({...curItem, completed: !curItem.completed});
-        })
-    }
+        });
+    };
 
     const deleteTodo = () => {
         deleter(todoItem.id)

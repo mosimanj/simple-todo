@@ -1,17 +1,27 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import TodoItem from './TodoItem'
 import AddTodo from "./AddTodo.jsx";
 import List from '@mui/material/List';
 
 
 export default function TodoList(){
-    const starterTodo = [
-        {id: crypto.randomUUID(), description: "Wash car", completed: true},
-        {id: crypto.randomUUID(), description: "Feed cat", completed: false},
-        {id: crypto.randomUUID(), description: "Pay bills", completed: false}
-    ];
+    // const starterTodo = [
+    //     {id: crypto.randomUUID(), description: "Wash car", completed: true},
+    //     {id: crypto.randomUUID(), description: "Feed cat", completed: false},
+    //     {id: crypto.randomUUID(), description: "Pay bills", completed: false}
+    // ];
+
+    const starterTodo = () => {
+        const jsonTodo = JSON.parse(localStorage.getItem("todo"));
+        return jsonTodo === null ? "" : jsonTodo
+    }
 
     const [todoList, setTodoList] = useState(starterTodo)
+
+    useEffect(() => {
+        const todoData = JSON.stringify(todoList);
+        localStorage.setItem("todo", todoData);
+    }, [todoList]);
 
     const todoAdder = (newTodo) => {
         setTodoList((oldTodo) => {
@@ -25,6 +35,15 @@ export default function TodoList(){
         setTodoList((oldTodo) => (oldTodo.filter((todo) => todo.id !== todoId)))
     }
 
+    const todoToggler = (todoId) => {
+        setTodoList(todoList.map((i) => {
+            if (todoId === i.id) {
+                return {...i, completed: !i.completed}
+            }
+            else {return i}
+        }))
+    }
+
     return(
         <>
         <h1>Simple To-Do</h1>
@@ -32,7 +51,7 @@ export default function TodoList(){
             {todoList.map((i) => {
                 // const labelId = `checkbox-list-label-${i.id}`;
 
-                return (<TodoItem key={i.id} todo={i} deleter={todoDeleter}/>);
+                return (<TodoItem key={i.id} todo={i} deleter={todoDeleter} toggler={todoToggler}/>);
             })}
 
             <AddTodo todoAdder={todoAdder}/>
